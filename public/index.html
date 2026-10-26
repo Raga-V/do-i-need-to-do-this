@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Do I Need to Do This?</title>
+  <meta name="description" content="Tell Lazy what you're avoiding. Gemma 3 asks a few questions on your own laptop, plain rules give an honest verdict.">
+  <meta name="theme-color" content="#F8F7FD">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" id="favicon" href="data:,"><!-- app.js draws Lazy here -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <button type="button" class="logo" data-view="flow" aria-label="Do I need to do this? Home">
+      <span class="logo-mark" id="logo-mark" aria-hidden="true"></span><span>Do I need to do this?</span>
+    </button>
+    <nav class="bar-actions" aria-label="Main">
+      <button type="button" id="sound-toggle" class="icon-btn" aria-pressed="true" aria-label="Sound effects" title="Sound effects"></button>
+      <button type="button" class="icon-btn" data-view="history" aria-label="History" title="History" data-icon="history"></button>
+      <button type="button" class="icon-btn" data-view="settings" aria-label="Settings" title="Settings" data-icon="settings"></button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ THE FLOW ============ -->
+    <section id="view-flow" class="view" aria-label="Ask Lazy">
+      <div class="wizard-top">
+        <button type="button" id="back" class="icon-btn ghost" aria-label="Back" data-icon="arrow-left" hidden></button>
+        <div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+          <span id="progress-fill"></span>
+        </div>
+        <span id="step-label" class="step-label">1 of 3</span>
+      </div>
+
+      <!-- Step 1 -->
+      <form id="ask-form" class="step" data-step="home" novalidate>
+        <button type="button" id="home-lazy" class="mascot" aria-label="Poke Lazy"></button>
+        <h1 class="headline"><label for="task">What are you avoiding?</label></h1>
+        <textarea id="task" class="big-input" rows="3" maxlength="200" required
+                  placeholder="Go to the 8 AM lecture tomorrow"></textarea>
+        <div class="chips" aria-label="Examples">
+          <button type="button" class="chip">Go to the 8 AM lecture tomorrow</button>
+          <button type="button" class="chip">Pay the electricity bill</button>
+          <button type="button" class="chip">Reply to the group chat</button>
+          <button type="button" class="chip">Iron my shirt</button>
+        </div>
+
+        <button type="button" id="more-toggle" class="text-btn" aria-expanded="false" aria-controls="more">+ Add context or a photo</button>
+        <div id="more" class="more" hidden>
+          <label for="context" class="field-label">Anything Lazy should know?</label>
+          <textarea id="context" rows="2" maxlength="600" placeholder="It's a revision class. I already know this topic."></textarea>
+          <div class="photo-row">
+            <label class="file-btn" data-icon="camera">Add a photo<input id="photo" type="file" accept="image/*" hidden></label>
+            <figure id="photo-preview" hidden><img alt="Your photo"><button type="button" id="photo-remove" class="text-btn">Remove</button></figure>
+          </div>
+          <p class="fine">A timetable, notice or screenshot. Gemma reads it on your laptop.</p>
+        </div>
+
+        <p id="ollama-notice" class="notice" hidden></p>
+        <button type="submit" class="btn primary">Ask Lazy</button>
+        <button type="button" id="plan-link" class="text-btn plan-link" data-icon="calendar" hidden>Plan my lazy day</button>
+        <p class="fine center" data-icon="lock">Your words and photos never leave your computer.</p>
+      </form>
+
+      <!-- Thinking -->
+      <div class="step center" data-step="thinking" hidden>
+        <div id="think-lazy" class="mascot"></div>
+        <p id="think-line" class="think-line" aria-live="polite"></p>
+        <p id="think-status" class="fine"></p>
+        <button type="button" id="cancel" class="btn ghost">Cancel</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step" data-step="questions" hidden>
+        <div id="question-card" class="card question-card"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step" data-step="verdict" hidden>
+        <article id="verdict" class="verdict"></article>
+      </div>
+
+      <!-- Plan my lazy day -->
+      <div class="step" data-step="plan" hidden>
+        <div id="plan" class="plan"></div>
+      </div>
+
+      <!-- Error -->
+      <div class="step center" data-step="error" hidden>
+        <div id="error-lazy" class="mascot"></div>
+        <h2 id="error-title" class="headline small"></h2>
+        <p id="error-text" class="muted"></p>
+        <div class="stack">
+          <button type="button" id="retry" class="btn primary">Try again</button>
+          <button type="button" class="btn ghost" data-view="settings">Open Settings</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HISTORY ============ -->
+    <section id="view-history" class="view" aria-labelledby="history-title" hidden>
+      <div class="view-head">
+        <button type="button" class="icon-btn ghost" data-view="flow" aria-label="Back to Ask" data-icon="arrow-left"></button>
+        <h1 id="history-title" class="headline small">History</h1>
+      </div>
+      <div id="stats" class="stats"></div>
+      <p id="teach" class="fine" hidden></p>
+      <ul id="history-list" class="history"></ul>
+      <div class="row">
+        <button type="button" id="export-csv" class="btn secondary">Export CSV</button>
+        <button type="button" id="clear-history" class="btn ghost danger">Clear all</button>
+      </div>
+    </section>
+
+    <!-- ============ SETTINGS ============ -->
+    <section id="view-settings" class="view" aria-labelledby="settings-title" hidden>
+      <div class="view-head">
+        <button type="button" class="icon-btn ghost" data-view="flow" aria-label="Back to Ask" data-icon="arrow-left"></button>
+        <h1 id="settings-title" class="headline small">Settings</h1>
+      </div>
+
+      <details class="card section">
+        <summary><span>About me</span><span class="sum-hint">Your role and the rules you live by</span></summary>
+        <form id="profile-form" class="section-body">
+          <p class="fine">Helps Lazy be lazy on your behalf. Stored in this browser, only sent to your local Gemma, and only when it's relevant to the task.</p>
+          <label for="role" class="field-label">Mostly I am a…</label>
+          <select id="role">
+            <option value="">(rather not say)</option>
+            <option>student</option>
+            <option>working professional</option>
+            <option>student with a job</option>
+            <option>freelancer</option>
+            <option>parent</option>
+          </select>
+          <label for="profile-notes" class="field-label">Things that change what I can skip</label>
+          <textarea id="profile-notes" rows="4" maxlength="800"
+            placeholder="My attendance is 88% and the minimum is 75%.&#10;Bills are auto-debited except electricity."></textarea>
+          <button type="submit" class="btn secondary">Save</button>
+        </form>
+      </details>
+
+      <details class="card section" id="memory-section">
+        <summary><span>What Lazy knows about you</span><span class="sum-hint" id="memory-count">Nothing yet</span></summary>
+        <div class="section-body">
+          <p class="fine">After each verdict, Gemma notes up to 3 lasting facts (like "Pays rent on the 5th"), so Lazy asks fewer questions next time. Stored only in this browser and only sent to your local Gemma.</p>
+          <ul id="memory-list" class="memory-list"></ul>
+          <form id="memory-add" class="own">
+            <input id="memory-new" type="text" maxlength="140" placeholder="Add a fact, e.g. My gym days are Mon/Wed/Fri" aria-label="Add a fact about you">
+            <button type="submit" class="icon-btn" aria-label="Add fact" data-icon="plus"></button>
+          </form>
+          <button type="button" id="memory-clear" class="btn ghost danger" hidden>Forget everything</button>
+        </div>
+      </details>
+
+      <details class="card section" id="timetable-section">
+        <summary><span>Your timetable</span><span class="sum-hint" id="tt-hint">Not added yet</span></summary>
+        <div class="section-body">
+          <p class="fine">Add your weekly timetable once. Gemma reads it on your laptop, and today's and tomorrow's entries are used for class and work questions, so Lazy stops asking "when is it?". Stored only in this browser.</p>
+          <div class="photo-row">
+            <label class="file-btn" data-icon="camera">Photo or screenshot<input id="tt-photo" type="file" accept="image/*" hidden></label>
+            <button type="button" id="tt-paste-toggle" class="text-btn" aria-expanded="false" aria-controls="tt-paste">or paste text</button>
+          </div>
+          <div id="tt-paste" hidden>
+            <textarea id="tt-text" rows="5" maxlength="6000" aria-label="Paste your timetable"
+              placeholder="Mon 9:00-10:00 Physics&#10;Tue 11:00-1:00 Chemistry lab&#10;Sat 10:00-14:00 Cafe shift"></textarea>
+            <button type="button" id="tt-read" class="btn secondary">Read it with Gemma</button>
+          </div>
+          <p id="tt-status" class="fine tt-status" aria-live="polite"></p>
+          <ul id="tt-list" class="tt-list"></ul>
+          <div class="row" id="tt-actions" hidden>
+            <button type="button" id="tt-add" class="btn ghost">+ Add a row</button>
+            <button type="button" id="tt-clear" class="btn ghost danger">Remove timetable</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="card section" id="voice-section" hidden>
+        <summary><span>Voice</span><span class="sum-hint" id="voice-hint">Lazy reads questions aloud</span></summary>
+        <div class="section-body">
+          <label class="switch"><input type="checkbox" id="voice-toggle"> Lazy reads each question aloud (ElevenLabs)</label>
+          <p class="fine">Only the question text is sent to ElevenLabs through this site's server. Turn it off for silence; "Hear the verdict" still works when you tap it.</p>
+        </div>
+      </details>
+
+      <details class="card section">
+        <summary><span>Your local AI</span><span class="sum-hint" id="ai-hint">Gemma 3 via Ollama</span></summary>
+        <form id="setup-form" class="section-body">
+          <p class="fine">Lazy thinks with Gemma 3, running in Ollama on your computer.</p>
+          <label for="host" class="field-label">Ollama address</label>
+          <input id="host" autocomplete="off">
+          <label for="model" class="field-label">Model</label>
+          <input id="model" autocomplete="off">
+          <button type="submit" class="btn secondary">Save &amp; test</button>
+          <p id="setup-result" class="fine" aria-live="polite"></p>
+          <details class="howto">
+            <summary>How to set up Ollama</summary>
+            <ol>
+              <li>Install Ollama from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a>.</li>
+              <li>Get the model (about 3.3 GB): <pre><code>ollama pull gemma3:4b</code></pre></li>
+              <li>Let this page talk to it:<pre><code id="origins-cmd"></code></pre></li>
+            </ol>
+            <p class="fine">Chrome may ask to let this site reach devices on your local network: allow it. Safari blocks https pages from calling <code>http://localhost</code>; use Chrome, Edge or Firefox, or run the app locally.</p>
+          </details>
+        </form>
+      </details>
+
+      <details class="card section">
+        <summary><span>Privacy</span><span class="sum-hint">What goes where</span></summary>
+        <div class="section-body">
+          <ul class="plain">
+            <li>Your task, context, photo, profile, memory and timetable go <strong>only</strong> to Ollama on your computer.</li>
+            <li id="server-privacy">Nothing is sent to a server.</li>
+            <li>The Inter font is loaded from Google Fonts.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="card section">
+        <summary><span>Powered by</span><span class="sum-hint">Which partners are on</span></summary>
+        <div class="section-body">
+          <ul id="partners" class="partners"></ul>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="foot"><span id="served-by"></span></footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

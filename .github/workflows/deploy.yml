@@ -1,0 +1,84 @@
+name: CI and Pages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]   # Render runs 20; 22 keeps us honest about the next LTS
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+
+      - name: Syntax check (node --check on every JS file)
+        run: npm run check
+
+      - name: Tests (decide() rules, Gemma client, server, TabPFN)
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test-output.txt
+
+      - name: Server smoke test
+        run: |
+          PORT=3000 node server.js > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://localhost:3000/healthz >/dev/null && break; sleep 0.5; done
+          set -x
+          curl -fsS http://localhost:3000/healthz | grep -q '"ok":true'
+          curl -fsS http://localhost:3000/ | grep -q 'Do I Need to Do This'
+          curl -fsS http://localhost:3000/api/config | grep -q '"speak":false'
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/speak -d '{}')" = "503"
+          test "$(curl -s -o /dev/null -w '%{http_code}' --path-as-is http://localhost:3000/../server.js)" != "200"
+          curl -fsS --compressed -D - -o /dev/null http://localhost:3000/app.js | grep -qi 'content-encoding: gzip'
+
+      - name: Job summary (test results + what the court rules)
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 🦥 Node ${{ matrix.node }}"
+            echo '```'
+            grep -E '^ℹ (tests|pass|fail)' test-output.txt || echo "tests did not run"
+            echo '```'
+            node scripts/rules-table.mjs || true
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Server log
+        if: always()
+        run: cat server.log || true
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deployment
+        uses: actions/deploy-pages@v4

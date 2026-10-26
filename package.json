@@ -1,0 +1,15 @@
+{
+  "name": "do-i-need-to-do-this",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tell it what you're avoiding. Gemma 3 asks a few questions on your laptop, plain rules give an honest verdict.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check-syntax.mjs",
+    "try": "node scripts/try-gemma.mjs",
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

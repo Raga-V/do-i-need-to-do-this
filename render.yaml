@@ -1,0 +1,29 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# One Node web service: serves the app and the optional /api routes.
+# Secrets are set in the Render dashboard (sync: false = never stored in this file).
+services:
+  - type: web
+    name: do-i-need-to-do-this
+    runtime: node
+    plan: free
+    region: singapore          # closest Render region to users in India
+    buildCommand: npm ci
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    autoDeploy: true
+    buildFilter:               # README/test-only pushes don't redeploy
+      paths:
+        - public/**
+        - server.js
+        - tabpfn.js
+        - package.json
+        - package-lock.json
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: TABPFN_TOKEN
+        sync: false
