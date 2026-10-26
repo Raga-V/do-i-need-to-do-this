@@ -1,0 +1,26 @@
+<svg class="lazy lazy-skip" width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lazy the couch potato (skip)">
+<style>.lazy .lz-body{animation:lzb 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}@keyframes lzb{50%{transform:scale(1.02,.98)}}
+.lazy-do .lz-body{animation:lzj .45s ease-in-out infinite}@keyframes lzj{50%{transform:translateY(-5px)}}
+.lazy .lz-float{animation:lzf 2.8s ease-in-out infinite}@keyframes lzf{50%{transform:translateY(-6px)}}
+.lazy .lz-zzz text{opacity:0;animation:lzz 2.6s ease-in-out infinite}.lazy .lz-zzz text:nth-child(2){animation-delay:.55s}.lazy .lz-zzz text:nth-child(3){animation-delay:1.1s}
+@keyframes lzz{25%,70%{opacity:1}100%{opacity:0;transform:translate(8px,-12px)}}@media (prefers-reduced-motion:reduce){.lazy *{animation:none!important}}</style>
+<ellipse cx="120" cy="226" rx="100" ry="8" fill="#000" opacity=".07"/>
+<rect x="34" y="74" width="172" height="112" rx="34" fill="#5E4ED6" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="rotate(-14 66 132)"><rect x="46" y="112" width="40" height="40" rx="12" fill="#FFD166" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 126l12 12M72 126l-12 12" stroke="#F2B33D" stroke-width="4" stroke-linecap="round"/></g>
+<g transform="rotate(14 174 132)"><rect x="154" y="112" width="40" height="40" rx="12" fill="#FFD166" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M168 126l12 12M180 126l-12 12" stroke="#F2B33D" stroke-width="4" stroke-linecap="round"/></g>
+<rect x="44" y="170" width="152" height="40" rx="14" fill="#9488FA" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="12" y="130" width="44" height="80" rx="20" fill="#7C6CF2" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><rect x="184" y="130" width="44" height="80" rx="20" fill="#7C6CF2" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="30" y="208" width="12" height="12" rx="3" fill="#2E241C"/><rect x="198" y="208" width="12" height="12" rx="3" fill="#2E241C"/>
+<g transform="translate(0 0) rotate(10 120 180)"><g class="lz-body">
+  <path d="M76 118q-24 -6 -36 -24" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="39" cy="92" r="6" fill="#D7A56B" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M164 118q24 -6 36 -24" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="201" cy="92" r="6" fill="#D7A56B" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M120 44C152 44 170 72 168 108C167 126 172 138 170 156C167 178 148 192 120 192C92 192 73 180 70 158C68 140 74 128 72 110C70 74 88 44 120 44Z" fill="#D7A56B" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 66c8-10 20-15 32-15" stroke="#ECC896" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M156 100C162 124 160 160 138 182C152 160 158 132 156 100Z" fill="#B98549" opacity=".35"/>
+  <path d="M148 70q5 -4 9 1M84 146q4 -4 8 0M150 166q5 -4 9 1M106 176q4 -3 8 1" stroke="#8C5E30" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <circle cx="134" cy="58" r="2.6" fill="#B98549"/><circle cx="160" cy="140" r="2.4" fill="#B98549"/><circle cx="82" cy="128" r="2.4" fill="#B98549"/><circle cx="96" cy="80" r="2" fill="#B98549"/>
+  <ellipse cx="92" cy="124" rx="9" ry="6" fill="#FF9AA8" opacity=".75"/><ellipse cx="150" cy="124" rx="9" ry="6" fill="#FF9AA8" opacity=".75"/>
+  <rect x="80" y="90" width="80" height="22" rx="11" fill="#4B4691" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 101q7 5 14 0M134 101q7 5 14 0" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="120" cy="128" rx="6" ry="7.5" fill="#2E241C"/><ellipse cx="120" cy="131" rx="3.6" ry="3" fill="#FF7A8A"/>
+  <path d="M104 186q-2 16 -8 24M136 186q2 16 8 24" stroke="#2E241C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><ellipse cx="93" cy="213" rx="9" ry="5.5" fill="#2E241C"/><ellipse cx="147" cy="213" rx="9" ry="5.5" fill="#2E241C"/>
+</g></g>
+<g class="lz-zzz" font-family="system-ui,sans-serif" font-weight="900" fill="#7C6CF2" stroke="#fff" stroke-width="2" paint-order="stroke"><text x="166" y="66" font-size="20">z</text><text x="182" y="48" font-size="26">z</text><text x="200" y="28" font-size="32">Z</text></g>
+</svg>
